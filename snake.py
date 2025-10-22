@@ -3,6 +3,23 @@ from tkinter import *
 SPEED=10
 CASE=20
 
+class Snake():
+    def __init__(self,dimension):
+        self.direction="N"
+        self.dx=0
+        self.dy=-1
+        self.position=[]
+        self.length=3
+        x1=int(dimension[0]/2)
+        y1=int(dimension[1]/2)
+        self.head=((x1,y1))
+        self.position.append(self.head)
+        y1+=1
+        self.position.append((x1,y1))
+        x1-=1
+        self.position.append((x1,y1))
+
+
 class Grid():
     def __init__(self,dimension:tuple [int,int]):
         self.grid=[]
@@ -17,9 +34,10 @@ class Grid():
 class Can(Canvas):
     def __init__(self,canvas,dimension):
         self.dimension=dimension
-        super().__init__(canvas,bg="white",width=dimension[0]*CASE,height=dimension[1]*CASE)
+        self.obj=[]
         self.grid=Grid(dimension)
-
+        self.snake=Snake(dimension)
+        super().__init__(canvas,bg="white",width=dimension[0]*CASE,height=dimension[1]*CASE)
 
     def draw_grid(self):      
         color='blue'
@@ -31,7 +49,28 @@ class Can(Canvas):
             self.create_line(0,y,w,y,width = 1, fill=color)
         self.pack()
 
+    def draw_snake(self):
+        for i in range (self.snake.length):
+            x0,y0=self.snake.position[i][0]*CASE,self.snake.position[i][1]*CASE
+            x1,y1=x0+CASE,y0+CASE
+            self.obj.append(self.create_oval(x0,y0,x1,y1,width = 1, fill="red"))
+        self.pack()
 
+    def update (self):
+        # x,y=self.snake.position[0][0]+self.snake.dx,self.snake.position[0][1]+self.snake.dy
+        # self.snake.position[0]=(x,y)
+        # self.move(self.obj[0],self.snake.dx*CASE,self.snake.dy*CASE)
+        for i in range (0,self.snake.length-1):
+            x,y=self.snake.position[i][0],self.snake.position[i][1]
+            x1,y1=self.snake.position[i+1][0],self.snake.position[i+1][1]
+            self.snake.position[i]=(x1,y1)
+            print(f'{i}  {self.snake.position[i]}')
+            self.move(self.obj[i],(x-x1)*CASE,(y-y1)*CASE)
+
+                          
+
+            
+        self.pack()
 
 class Window_0(Frame):
     def __init__(self,dimension): 
@@ -61,7 +100,7 @@ class Window_0(Frame):
 
     
     def mousedown_left(self, event):
-        pass
+        self.w.draw_snake()
 
     def mouseup_left(self, event):
         pass
@@ -70,7 +109,7 @@ class Window_0(Frame):
         pass
 
     def mousedown_right(self, event):
-        pass
+        self.w.update()
 
     def start(self):
         pass
