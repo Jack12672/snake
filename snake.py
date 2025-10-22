@@ -10,7 +10,7 @@ class Grid():
         temp=[]
         for x in range (dimension[0]):
             for y in range (dimension[1]):
-                temp.append()
+                temp.append(0)
             self.grid.append(temp)
             temp=[]  
 
